@@ -1,35 +1,27 @@
 repos:
-  - repo: https://github.com/pycqa/isort
-    rev: 5.5.2
-    hooks:
-      - id: isort
-
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v2.3.0
+    rev: v6.0.0
     hooks:
       - id: check-yaml
       - id: end-of-file-fixer
       - id: trailing-whitespace
 
-  - repo: https://github.com/psf/black
-    rev: 22.10.0
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.17.0
     hooks:
-      - id: black
-        exclude: migrations/
-        args: [ --diff, --check ]
-
-  - repo: https://github.com/PyCQA/flake8
-    rev: 4.0.1
-    hooks:
-      - id: flake8
+      - id: ruff-check
+        args: [ --fix ]
+      - id: ruff-format
 
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v0.950
+    rev: v2.4.0
     hooks:
       - id: mypy
-        exclude: docs/|example-plugin/|migrations/
-        args: [ ]
+        exclude: migrations/
         additional_dependencies:
           - 'pydantic'
+          - 'pydantic-settings'
           - 'sqlalchemy'
           - 'fastapi'
+          - 'httpx'
+          - 'pytest'

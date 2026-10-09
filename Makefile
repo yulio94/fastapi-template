@@ -1,11 +1,17 @@
-dev.local:
-	docker-compose -f docker-compose-local.yml up -d && uvicorn src.entrypoints.api:app --reload
+dev:
+	docker compose up -d db && uv run uvicorn src.entrypoints.http:app --reload
 
-database.migration:
-	alembic revision --autogenerate
+db.migration:
+	uv run alembic revision --autogenerate -m "$(m)"
 
-database.upgrade:
-	alembic upgrade head
+db.upgrade:
+	uv run alembic upgrade head
 
-database.downgrade:
-	alembic downgrade -1
+db.downgrade:
+	uv run alembic downgrade -1
+
+test:
+	uv run pytest
+
+lint:
+	uv run pre-commit run --all-files

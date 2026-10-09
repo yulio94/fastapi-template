@@ -1,61 +1,52 @@
 # FastAPI Template
 
+## Setup
+
+```bash
+uv sync
+cp env.example .env
+make dev          # starts Postgres on :9991 and the API on :8000
+make db.upgrade   # apply migrations
+```
+
+Other targets:
+
+```bash
+make db.migration m="add orders"   # autogenerate a revision
+make db.downgrade
+make test
+make lint                          # ruff + mypy via pre-commit
+```
+
+Run `uv run pre-commit install` once to lint on every commit.
+
 ## Directory explanation:
 
 ```bash
 ├── config
 ├── migrations
-│   └── versions
+│   └── versions
 ├── src
-│   ├── entrypoints
-│   ├── models
-│   ├── routes
-│   └── services
-│   └── repositories
+│   ├── entrypoints
+│   ├── models
+│   ├── repositories
+│   ├── routes
+│   └── services
 └── tests
-
 ```
 
 ### config:
 
-This folder is responsible to save
-configuration files like project constants
-or environment variables .
-
-```bash
-├── config
-│   ├── conts.py
-│   └── envs.py
-
-```
+Settings loaded from environment variables and `.env`, see `config/settings.py`.
+Add new variables as fields on `Settings`; the app fails at startup if a required one is missing.
 
 ### migrations:
 
-Alembic's migrations directory.
-
-```bash
-├── migrations
-│   ├── README
-│   ├── env.py
-│   ├── script.py.mako
-│   └── versions
-│   └── 3034f17c14fe_.py
-
-```
+Alembic's migrations directory. Revisions are named `YYYY_MM_DD_HHMM-<rev>_<slug>.py`.
 
 ### src:
 
 Project source code.
-
-```bash
-├── src
-│   ├── entrypoints
-│   ├── models
-│   ├── routes
-│   └── services
-│   └── repositories
-
-```
 
 #### entrypoints:
 
@@ -80,10 +71,4 @@ Save repositories that interact with models and the database.
 
 ### tests:
 
-Base code tests.
-
-```bash
-└── tests
-└── conftest.py
-
-```
+Async tests use anyio's pytest plugin; mark them with `@pytest.mark.anyio` and use the `client` fixture from `conftest.py`.
